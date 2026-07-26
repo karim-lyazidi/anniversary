@@ -1,0 +1,334 @@
+html_content = r"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Happy Birthday Aya ♥</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Dancing+Script:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,500;0,600;1,400&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --beige: #fdfaf6;
+    --champagne: #f7f1e3;
+    --rose-gold: #e7c1b8;
+    --soft-pink: #fce4ec;
+    --deep-pink: #d81b60;
+    --accent-pink: #c2185b;
+    --text-color: #3e2723;
+    --border-color: #d7ccc8;
+    --gold: #d4af37;
+    --vintage-paper: #f4ece1;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { 
+    width: 100%; 
+    height: 100%; 
+    background: var(--beige); 
+    color: var(--text-color);
+    overflow: hidden;
+    touch-action: manipulation;
+}
+
+/* ── VINTAGE OVERLAY ── */
+body::after {
+    content: ''; position: fixed; inset: 0;
+    background: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+    opacity: 0.2; pointer-events: none; z-index: 5000;
+}
+
+/* ── VIGNETTE ── */
+.vignette {
+    position: fixed; inset: 0;
+    background: radial-gradient(circle, transparent 50%, rgba(62, 39, 35, 0.15) 100%);
+    pointer-events: none; z-index: 4500;
+}
+
+/* ── MUSIC BAR ── */
+#music-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 6000;
+  background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px);
+  border-bottom: 2px solid var(--gold);
+  padding: 8px 15px; display: flex; align-items: center; gap: 10px;
+  font-family: 'Cormorant Garamond', serif; font-size: 13px;
+  color: var(--text-color); letter-spacing: 0.05em;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.music-controls { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+#music-toggle { cursor: pointer; font-size: 18px; padding: 5px; }
+#volume-slider { width: 60px; height: 4px; cursor: pointer; accent-color: var(--deep-pink); }
+
+/* ── PAGES ── */
+#pages { position: fixed; top: 40px; left: 0; right: 0; bottom: 0; }
+.page {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  padding: 60px 20px 120px;
+  overflow-y: auto;
+  opacity: 0; pointer-events: none; transition: opacity 0.8s ease;
+  background: linear-gradient(160deg, var(--beige) 0%, var(--vintage-paper) 50%, var(--soft-pink) 100%);
+  -webkit-overflow-scrolling: touch;
+}
+.page.active { opacity: 1; pointer-events: all; }
+
+/* ── NAV BUTTONS ── */
+.nav-btn {
+  position: fixed; bottom: 20px;
+  background: white; border: 2px solid var(--gold);
+  color: var(--text-color); font-family: 'Cormorant Garamond', serif;
+  font-size: 13px; font-weight: 700; text-transform: uppercase;
+  padding: 10px 20px; cursor: pointer; letter-spacing: 0.1em;
+  z-index: 5500; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+#btn-prev { left: 15px; }
+#btn-next { right: 15px; }
+.hidden { opacity: 0; pointer-events: none; }
+
+#page-dots {
+  position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 8px; z-index: 5500;
+}
+.pdot { width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--gold); background: transparent; }
+.pdot.active { background: var(--deep-pink); transform: scale(1.3); }
+
+/* ── POLAROID ── */
+.polaroid {
+  background: white; border: 1px solid #ddd;
+  padding: 10px 10px 40px; position: relative; display: inline-block;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  max-width: 100%;
+  z-index: 100; /* Main content polaroids on top */
+}
+.polaroid img { display: block; width: 100%; height: auto; border: 1px solid #eee; }
+.polaroid .cap {
+  position: absolute; bottom: 10px; left: 0; right: 0; text-align: center;
+  font-family: 'Dancing Script', cursive; font-size: 15px; font-weight: 700;
+}
+.tape {
+  display: block; background: rgba(210, 190, 160, 0.3);
+  height: 20px; width: 60px; position: absolute; top: -10px; left: 50%;
+  transform: translateX(-50%) rotate(-2deg); z-index: 105;
+}
+
+/* ── CARDS ── */
+.card {
+  background: white; border: 1px solid var(--border-color);
+  padding: 25px; max-width: 95%; width: 100%;
+  position: relative; text-align: center;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.06);
+  margin-top: 15px;
+  z-index: 100; /* Ensure card is above background pics */
+}
+.card::after { content: ''; position: absolute; inset: 5px; border: 1px double var(--gold); opacity: 0.3; }
+.card-text { font-family: 'Cormorant Garamond', serif; font-size: 18px; line-height: 1.7; font-weight: 600; }
+
+/* ── TYPOGRAPHY ── */
+.big-title { font-family: 'Dancing Script', cursive; font-size: clamp(45px, 12vw, 90px); color: var(--deep-pink); font-weight: 700; margin-bottom: 10px; z-index: 100; position: relative;}
+.sub-label { font-size: 13px; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; font-family: 'Cormorant Garamond', serif; font-weight: 700; z-index: 100; position: relative;}
+.section-title { font-family: 'Dancing Script', cursive; font-size: 35px; color: var(--accent-pink); font-weight: 700; margin-bottom: 20px; text-align: center; z-index: 100; position: relative;}
+.equation { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: #8d6e63; font-style: italic; font-weight: 700; margin-bottom: 20px; z-index: 100; position: relative;}
+
+/* ── GRAPH ── */
+#graph-container {
+    width: 100%; max-width: 500px; background: white;
+    border: 1px solid var(--border-color); padding: 15px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08); position: relative;
+    z-index: 200; /* Graph on top */
+}
+#graph-canvas { width: 100%; height: 250px; background: #fffcf9; }
+.graph-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
+@media (min-width: 600px) { .graph-stats { grid-template-columns: repeat(4, 1fr); } }
+.stat-item { background: var(--beige); padding: 8px; border: 1px solid var(--gold); font-family: 'Amiri', serif; font-size: 14px; text-align: center; font-weight: 700; }
+.stat-item span { display: block; color: var(--deep-pink); font-size: 16px; }
+
+/* ── SCATTERED PICS ── */
+.scatter-pol { 
+    position: absolute; width: 80px; z-index: 1; opacity: 0.85; pointer-events: none; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+@media (min-width: 768px) { .scatter-pol { width: 110px; } }
+
+.ornament { position: absolute; font-family: 'Dancing Script'; font-size: 20px; color: var(--gold); opacity: 0.4; pointer-events: none; z-index: 1; }
+
+</style>
+</head>
+<body>
+<div class="vignette"></div>
+<audio id="bg-music" loop><source src="Taylor Swift Call It What You Want .mp3" type="audio/mpeg"></audio>
+
+<div id="music-bar">
+  <span style="font-weight: 700;">call it what you want &nbsp;♪</span>
+  <div class="music-controls">
+    <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.5">
+    <div id="music-toggle">🔇</div>
+  </div>
+</div>
+
+<div id="pages">
+  <div class="page active" id="p1">
+    <p class="sub-label">Happy 21st Birthday</p>
+    <h1 class="big-title">Aya</h1>
+    <div class="polaroid" style="width:280px; margin-top:15px; transform:rotate(-1deg)">
+      <span class="tape"></span><img src="1.jpeg"><div class="cap">The Love of My Life</div>
+    </div>
+  </div>
+
+  <div class="page" id="p2">
+    <p class="section-title">Our Love Function</p>
+    <p class="equation">(x² + y² - 1)³ = x²y³</p>
+    <div id="graph-container">
+        <canvas id="graph-canvas"></canvas>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; font-family: 'Cormorant Garamond'; font-weight: 700; font-size: 14px;">
+            <label>Width: <input type="range" id="x-range" min="0.5" max="2.5" step="0.1" value="1.3" style="width:100%"></label>
+            <label>Height: <input type="range" id="y-range" min="0.5" max="2.5" step="0.1" value="1.3" style="width:100%"></label>
+        </div>
+        <p style="text-align: center; margin-top: 20px; font-family: 'Dancing Script'; font-size: 18px; font-weight: 700; color: var(--gold);">Our Words Together</p>
+        <div class="graph-stats">
+            <div class="stat-item">N7abk <span>597</span></div>
+            <div class="stat-item">عمري <span>866</span></div>
+            <div class="stat-item">نموت عليك <span>559</span></div>
+            <div class="stat-item">Love <span>3290</span></div>
+            <div class="stat-item">Baby <span>4890</span></div>
+            <div class="stat-item">Kiss <span>926</span></div>
+            <div class="stat-item">توحشتك <span>842</span></div>
+            <div class="stat-item">I adore you <span>153</span></div>
+        </div>
+    </div>
+  </div>
+
+  <div class="page" id="p3">
+    <div class="card">
+      <div class="card-text" style="text-align: left;">
+        <p>My dearest Aya,</p><br>
+        <p>What can I say that I haven't already said a million times over? What words could ever hope to describe you, my love?</p><br>
+        <p>Simply put, you're the best thing that has ever happened to me. Your voice calms every worry in my head, your touch reminds me of the heaven on earth that you represent, and your peace feels like the home I always searched for. You are everything beautiful in this world.</p><br>
+        <p>You're the funniest, brightest, kindest, most elegant, most caring, most compassionate, and strongest person I've ever known.</p><br>
+        <p>You have made me a better person simply by being in my life, and every day I strive to become someone worthy of your boundless love.</p><br>
+        <p>Happy birthday baby. I wish you all the happiness in the world, and I wish to spend every future birthday by your side, my love. ♥️</p><br>
+        <p>I love you Aya, <span style="font-family: 'Amiri', serif; font-size: 22px;">نعشقك عمري</span>♥️</p>
+        <div style="text-align: right; margin-top: 25px; font-family: 'Dancing Script'; font-size: 28px; color: var(--accent-pink);">Yours forever, Karim</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="p4">
+    <p class="section-title">Our Gifts & Memories</p>
+    <div style="display:flex; flex-direction: column; gap:30px; align-items: center; width:100%;">
+        <div class="polaroid" style="width:240px; transform:rotate(-2deg)"><span class="tape"></span><img src="3.jpg"><div class="cap">My gift to her</div></div>
+        <div class="polaroid" style="width:90%; max-width:400px; transform:rotate(2deg)"><span class="tape"></span><img src="4.jpg" style="aspect-ratio: 16/9; object-fit: cover;"><div class="cap">Her gifts to me</div></div>
+    </div>
+  </div>
+
+  <div class="page" id="p5">
+    <p class="section-title">Us Forever</p>
+    <div class="polaroid" style="width:280px; transform: rotate(-1.5deg)"><img src="2.jpg"><span class="tape"></span><div class="cap">Hand in Hand</div></div>
+  </div>
+
+  <div class="page" id="p6">
+    <h1 class="big-title">I love you baby</h1>
+    <div class="polaroid" style="width:260px; transform:rotate(2deg); margin-top: 20px;"><img src="17.jpeg"><span class="tape"></span></div>
+  </div>
+</div>
+
+<button class="nav-btn hidden" id="btn-prev" onclick="changePage(-1)">Back</button>
+<div id="page-dots"></div>
+<button class="nav-btn" id="btn-next" onclick="changePage(1)">Next</button>
+
+<script>
+var total=6, cur=0;
+var pages=document.querySelectorAll('.page');
+var dotsContainer=document.getElementById('page-dots');
+var btnP=document.getElementById('btn-prev'), btnN=document.getElementById('btn-next');
+var allPics = ['5.jfif', '6.jpeg', '16.jfif', '11.jfif', '15.jfif', '13.jpeg', '8.jpeg', '9.jfif', '10.jpeg', '12.jpeg', '7.jfif', '14.jpeg'];
+
+function createScatteredPics() {
+    pages.forEach((page, index) => {
+        // More pics per page
+        for(let i=0; i<10; i++) {
+            let pic = allPics[Math.floor(Math.random() * allPics.length)];
+            let div = document.createElement('div');
+            div.className = 'scatter-pol polaroid';
+            div.innerHTML = `<img src="${pic}">`;
+            
+            // STRICT PLACEMENT for Letter Page (Index 2)
+            let side = Math.random() > 0.5 ? 'left' : 'right';
+            let xPos;
+            if (index === 2) {
+                // Very narrow gutters for the letter page
+                xPos = side === 'left' ? (Math.random() * 5) : (Math.random() * 5 + 90);
+            } else {
+                xPos = side === 'left' ? (Math.random() * 12) : (Math.random() * 12 + 85);
+            }
+            
+            div.style.left = xPos + '%';
+            div.style.top = (Math.random() * 80 + 5) + '%';
+            div.style.transform = `rotate(${Math.random() * 40 - 20}deg)`;
+            
+            // PREPEND so they are behind everything by default
+            page.prepend(div);
+        }
+    });
+}
+createScatteredPics();
+
+for(var i=0;i<total;i++){
+  var d=document.createElement('div');
+  d.className='pdot'+(i===0?' active':'');
+  d.onclick=(function(idx){return function(){goTo(idx)}})(i);
+  dotsContainer.appendChild(d);
+}
+
+function goTo(n){
+  pages[cur].classList.remove('active');
+  document.querySelectorAll('.pdot')[cur].classList.remove('active');
+  cur=n;
+  pages[cur].classList.add('active');
+  document.querySelectorAll('.pdot')[cur].classList.add('active');
+  btnP.classList.toggle('hidden',cur===0);
+  btnN.innerText = cur === total-1 ? "Start" : "Next";
+  if(cur===1) setTimeout(drawHeart, 200);
+}
+
+function changePage(dir){
+    if(cur === total-1 && dir === 1) goTo(0);
+    else goTo(Math.max(0,Math.min(total-1,cur+dir)));
+}
+
+var music = document.getElementById('bg-music');
+var musicToggle = document.getElementById('music-toggle');
+var volumeSlider = document.getElementById('volume-slider');
+var playing = false;
+
+musicToggle.onclick = function(e) {
+    e.stopPropagation();
+    if (playing) { music.pause(); musicToggle.innerText = '🔇'; playing = false; }
+    else { music.play().then(() => { musicToggle.innerText = '🎵'; playing = true; }).catch(err => console.log(err)); }
+};
+
+volumeSlider.oninput = function(e) { music.volume = e.target.value; };
+document.body.onclick = function() { if (!playing) { music.play().then(() => { playing = true; musicToggle.innerText = '🎵'; }).catch(e => console.log(e)); } };
+
+function drawHeart(){
+  var c=document.getElementById('graph-canvas');
+  if(!c) return;
+  var ctx=c.getContext('2d'), W=c.width = c.offsetWidth, H=c.height = c.offsetHeight;
+  ctx.clearRect(0,0,W,H);
+  var scaleX = 10 * document.getElementById('x-range').value, scaleY = 10 * document.getElementById('y-range').value;
+  ctx.translate(W/2, H/2 + 20);
+  ctx.beginPath(); ctx.strokeStyle = '#d81b60'; ctx.lineWidth = 4;
+  for(var t=0;t<Math.PI*2;t+=0.01){
+    var x = 16 * Math.pow(Math.sin(t), 3), y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+    ctx.lineTo(x * scaleX, y * scaleY);
+  }
+  ctx.closePath(); ctx.fillStyle = 'rgba(216, 27, 96, 0.2)'; ctx.fill(); ctx.stroke();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.font = "bold 18px 'Dancing Script'"; ctx.fillStyle = '#d81b60'; ctx.textAlign = 'center'; ctx.fillText("Aya ♥ Karim", W/2, H/2 + 30);
+}
+document.getElementById('x-range').oninput = drawHeart;
+document.getElementById('y-range').oninput = drawHeart;
+</script>
+</body></html>
+"""
+
+with open('happy_birthday_aya_final.html', 'w', encoding='utf-8') as f:
+    f.write(html_content)
